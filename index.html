@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Таможенный навигатор — главная</title>
+  <title>Таможенный сервис — главная</title>
   <link rel="stylesheet" href="styles.css" />
   <script type="module" src="app.js" defer></script>
 </head>
@@ -42,6 +42,18 @@
     </nav>
 
     <div class="auth">
+      <div class="account" id="account">
+        <button class="btn outline account-btn" id="account-btn" aria-haspopup="true" aria-expanded="false">
+          Личный кабинет
+        </button>
+        <div class="account-menu" id="account-menu" role="menu" aria-label="Личный кабинет меню" hidden>
+          <button class="menu-item" role="menuitem" data-action="profile">Профиль</button>
+          <button class="menu-item" role="menuitem" data-action="history">История действий</button>
+          <button class="menu-item" role="menuitem" data-action="calculations">Предыдущие расчёты</button>
+          <button class="menu-item" role="menuitem" data-action="viewed">Просмотренные документы</button>
+        </div>
+      </div>
+
       <button id="login" class="btn outline">Войти</button>
       <button id="signup" class="btn primary">Регистрация</button>
     </div>
@@ -58,9 +70,64 @@
           </svg>
           <h3>Расчет таможенных платежей</h3>
         </div>
-        <p class="desc">Быстрый и точный расчет пошлин, налогов и сборов до заявления товара на таможню с учетом всех особенностей импорта/экспорта.</p>
+
+        <div class="calc">
+          <label class="calc-question">Что нужно рассчитать?</label>
+          <div class="calc-options" role="radiogroup" aria-label="Варианты расчёта">
+            <button class="option" data-value="value" data-key="customs">Таможенная стоимость</button>
+            <button class="option" data-value="vat" data-key="vat">НДС</button>
+            <button class="option" data-value="excise" data-key="excise">Акциз</button>
+            <button class="option" data-value="total" data-key="total">Итоговый расчёт</button>
+          </div>
+
+          <div class="calc-inputs" aria-hidden="false">
+            <label class="input-row">Стоимость товара (EUR)
+              <input type="number" id="goods-value" min="0" step="0.01" value="100">
+            </label>
+            <label class="input-row">Таможенная ставка (%)
+              <input type="number" id="tariff-rate" min="0" step="0.01" value="5">
+            </label>
+            <label class="input-row">Ставка НДС (%)
+              <input type="number" id="vat-rate" min="0" step="0.01" value="20">
+            </label>
+            <label class="input-row">Ставка акциза (EUR)
+              <input type="number" id="excise-rate" min="0" step="0.01" value="0">
+            </label>
+          </div>
+
+          <div class="calc-result" id="calc-result" aria-live="polite">Выберите вариант и введите параметры, затем нажмите "Рассчитать".</div>
+
+          <div class="card-actions">
+            <button class="btn primary" id="calc-run">Рассчитать</button>
+            <button class="btn outline" id="calc-reset">Сбросить</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" id="kb">
+        <div class="card-head">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden>
+            <rect x="4" y="4" width="16" height="16" rx="2" fill="#0B5EFF"/>
+            <path d="M8 8h8M8 12h8M8 16h5" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <h3>База знаний</h3>
+        </div>
+
+        <!-- Scrollable column with legal references -->
+        <div class="kb-scroll" id="kb-content" tabindex="0" role="region" aria-label="База знаний — список нормативных актов">
+          <div class="kb-item"><strong>ТН ВЭД ЕАЭС</strong></div>
+          <div class="kb-item">"Таможенный кодекс Евразийского экономического союза" (ред. от 29.05.2019) (приложение N 1 к Договору о Таможенном кодексе Евразийского экономического союза)</div>
+          <div class="kb-item">"Кодекс Российской Федерации об административных правонарушениях" от 30.12.2001 N 195-ФЗ (ред. от 23.03.2026)</div>
+          <div class="kb-item">Гражданский кодекс Российской Федерации (ГК РФ)</div>
+          <div class="kb-item">"Уголовный кодекс Российской Федерации" от 13.06.1996 N 63-ФЗ (ред. от 20.02.2026)</div>
+          <div class="kb-item">Федеральный закон "О таможенном регулировании в Российской Федерации и о внесении изменений в отдельные законодательные акты Российской Федерации" от 03.08.2018 N 289-ФЗ (последняя редакция)</div>
+          <div class="kb-item">Федеральный закон от 18.07.1999 N 183-ФЗ (ред. от 26.03.2022) "Об экспортном контроле"</div>
+          <div class="kb-item">Постановление Правительства РФ от 28.11.2024 № 1637 "О ставках и базе для исчисления таможенных сборов за совершение таможенных операций, связанных с выпуском товаров"</div>
+          <div class="kb-item">Решение Совета ЕЭК от 14.09.2021 № 80 "Об утверждении единой Товарной номенклатуры внешнеэкономической деятельности Евразийского экономического союза и Единого таможенного тарифа Евразийского экономического союза, а также об изменении и признании утратившими силу некоторых решений Совета Евразийской экономической комиссии"</div>
+        </div>
+
         <div class="card-actions">
-          <button class="btn yellow" id="start-calc">Рассчитать</button>
+          <button class="btn yellow-outline" id="open-kb">Изучить</button>
         </div>
       </article>
 
@@ -89,20 +156,6 @@
         <p class="desc">Ответы на ваши вопросы по таможенному законодательству, условия перевозки и таможенного оформления.</p>
         <div class="card-actions">
           <button class="btn yellow" id="ask-ai">Задать вопрос</button>
-        </div>
-      </article>
-
-      <article class="card" id="kb">
-        <div class="card-head">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden>
-            <rect x="4" y="4" width="16" height="16" rx="2" fill="#0B5EFF"/>
-            <path d="M8 8h8M8 12h8M8 16h5" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
-          </svg>
-          <h3>База знаний</h3>
-        </div>
-        <p class="desc">Актуальные законы, правила, инструкции и судебная практика в области внешнеэкономической деятельности.</p>
-        <div class="card-actions">
-          <button class="btn yellow-outline" id="open-kb">Изучить</button>
         </div>
       </article>
     </section>
