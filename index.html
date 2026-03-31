@@ -72,35 +72,13 @@
         </div>
 
         <div class="calc">
-          <label class="calc-question">Что нужно рассчитать?</label>
-          <div class="calc-options" role="radiogroup" aria-label="Варианты расчёта">
-            <button class="option" data-value="value" data-key="customs">Таможенная стоимость</button>
-            <button class="option" data-value="vat" data-key="vat">НДС</button>
-            <button class="option" data-value="excise" data-key="excise">Акциз</button>
-            <button class="option" data-value="total" data-key="total">Итоговый расчёт</button>
-          </div>
+          <p class="desc" style="color:#07203b;margin:0 0 12px;">
+            Быстрый и точный расчет пошлин, налогов и сборов до заявления товара на таможню с учетом всех особенностей импорта/экспорта.
+          </p>
+        </div>
 
-          <div class="calc-inputs" aria-hidden="false">
-            <label class="input-row">Стоимость товара (EUR)
-              <input type="number" id="goods-value" min="0" step="0.01" value="100">
-            </label>
-            <label class="input-row">Таможенная ставка (%)
-              <input type="number" id="tariff-rate" min="0" step="0.01" value="5">
-            </label>
-            <label class="input-row">Ставка НДС (%)
-              <input type="number" id="vat-rate" min="0" step="0.01" value="20">
-            </label>
-            <label class="input-row">Ставка акциза (EUR)
-              <input type="number" id="excise-rate" min="0" step="0.01" value="0">
-            </label>
-          </div>
-
-          <div class="calc-result" id="calc-result" aria-live="polite">Выберите вариант и введите параметры, затем нажмите "Рассчитать".</div>
-
-          <div class="card-actions">
-            <button class="btn primary" id="calc-run">Рассчитать</button>
-            <button class="btn outline" id="calc-reset">Сбросить</button>
-          </div>
+        <div class="card-actions">
+          <button class="btn primary" id="calc-run">Начать расчёт</button>
         </div>
       </article>
 
@@ -113,17 +91,11 @@
           <h3>База знаний</h3>
         </div>
 
-        <!-- Scrollable column with legal references -->
-        <div class="kb-scroll" id="kb-content" tabindex="0" role="region" aria-label="База знаний — список нормативных актов">
-          <div class="kb-item"><strong>ТН ВЭД ЕАЭС</strong></div>
-          <div class="kb-item">"Таможенный кодекс Евразийского экономического союза" (ред. от 29.05.2019) (приложение N 1 к Договору о Таможенном кодексе Евразийского экономического союза)</div>
-          <div class="kb-item">"Кодекс Российской Федерации об административных правонарушениях" от 30.12.2001 N 195-ФЗ (ред. от 23.03.2026)</div>
-          <div class="kb-item">Гражданский кодекс Российской Федерации (ГК РФ)</div>
-          <div class="kb-item">"Уголовный кодекс Российской Федерации" от 13.06.1996 N 63-ФЗ (ред. от 20.02.2026)</div>
-          <div class="kb-item">Федеральный закон "О таможенном регулировании в Российской Федерации и о внесении изменений в отдельные законодательные акты Российской Федерации" от 03.08.2018 N 289-ФЗ (последняя редакция)</div>
-          <div class="kb-item">Федеральный закон от 18.07.1999 N 183-ФЗ (ред. от 26.03.2022) "Об экспортном контроле"</div>
-          <div class="kb-item">Постановление Правительства РФ от 28.11.2024 № 1637 "О ставках и базе для исчисления таможенных сборов за совершение таможенных операций, связанных с выпуском товаров"</div>
-          <div class="kb-item">Решение Совета ЕЭК от 14.09.2021 № 80 "Об утверждении единой Товарной номенклатуры внешнеэкономической деятельности Евразийского экономического союза и Единого таможенного тарифа Евразийского экономического союза, а также об изменении и признании утратившими силу некоторых решений Совета Евразийской экономической комиссии"</div>
+        <!-- Scrollable column removed: content moved to modal. Empty container kept for accessibility/keyboard focus -->
+        <div class="calc" id="kb-content" tabindex="0" role="region" aria-label="База знаний — список нормативных актов">
+          <p class="desc" style="color:#07203b;margin:0 0 12px;">
+            Актуальные законы, правила, инструкции и судебная практика в области внешнеэкономической деятельности.
+          </p>
         </div>
 
         <div class="card-actions">
@@ -139,7 +111,7 @@
           </svg>
           <h3>Конструктор документов</h3>
         </div>
-        <p class="desc">Заполнение деклараций, заявлений и сопроводительных документов с подсказками на каждом этапе.</p>
+        <p class="desc" style="color:#07203b;margin:0 0 12px;">Заполнение деклараций, заявлений и сопроводительных документов с подсказками на каждом этапе.</p>
         <div class="card-actions">
           <button class="btn yellow-outline" id="create-docs">Создать документы</button>
         </div>
@@ -153,7 +125,7 @@
           </svg>
           <h3>AI Помощник</h3>
         </div>
-        <p class="desc">Ответы на ваши вопросы по таможенному законодательству, условия перевозки и таможенного оформления.</p>
+        <p class="desc" style="color:#07203b;margin:0 0 12px;">Ответы на ваши вопросы по таможенному законодательству, условия перевозки и таможенного оформления.</p>
         <div class="card-actions">
           <button class="btn yellow" id="ask-ai">Задать вопрос</button>
         </div>
@@ -233,5 +205,56 @@
     </div>
     <div class="small">© 2026 Таможенный навигатор</div>
   </footer>
+
+  <!-- Knowledge base template used by the "Изучить" button (hidden) -->
+  <template id="kb-template">
+    <div class="kb-scroll" tabindex="0" role="region" aria-label="Список нормативных актов">
+      <div class="kb-item"><strong>ТН ВЭД ЕАЭС</strong></div>
+      <div class="kb-item">"Таможенный кодекс Евразийского экономического союза" (ред. от 29.05.2019) (приложение N 1 к Договору о Таможенном кодексе Евразийского экономического союза)</div>
+      <div class="kb-item">"Кодекс Российской Федерации об административных правонарушениях" от 30.12.2001 N 195-ФЗ (ред. от 23.03.2026)</div>
+      <div class="kb-item">Гражданский кодекс Российской Федерации (ГК РФ)</div>
+      <div class="kb-item">"Уголовный кодекс Российской Федерации" от 13.06.1996 N 63-ФЗ (ред. от 20.02.2026)</div>
+      <div class="kb-item">Федеральный закон "О таможенном регулировании в Российской Федерации и о внесении изменений в отдельные законодательные акты Российской Федерации" от 03.08.2018 N 289-ФЗ (последняя редакция)</div>
+      <div class="kb-item">Федеральный закон от 18.07.1999 N 183-ФЗ (ред. от 26.03.2022) "Об экспортном контроле"</div>
+      <div class="kb-item">Постановление Правительства РФ от 28.11.2024 № 1637 "О ставках и базе для исчисления таможенных сборов за совершение таможенных операций, связанных с выпуском товаров"</div>
+      <div class="kb-item">Решение Совета ЕЭК от 14.09.2021 № 80 "Об утверждении единой Товарной номенклатуры внешнеэкономической деятельности Евразийского экономического союза и Единого таможенного тарифа Евразийского экономического союза, а также об изменении и признании утратившими силу некоторых решений Совета Евразийской экономической комиссии"</div>
+    </div>
+  </template>
+
+  <!-- Calculator modal template used by "Начать расчёт" -->
+  <template id="calc-template">
+    <div class="calc" role="region" aria-label="Калькулятор таможенных платежей">
+      <label class="calc-question">Что нужно рассчитать?</label>
+      <div class="calc-options" role="radiogroup" aria-label="Варианты расчёта">
+        <button class="option" data-value="value" data-key="customs">Таможенная стоимость</button>
+        <button class="option" data-value="vat" data-key="vat">НДС</button>
+        <button class="option" data-value="excise" data-key="excise">Акциз</button>
+        <button class="option" data-value="total" data-key="total">Итоговый расчёт</button>
+      </div>
+
+      <div class="calc-inputs" aria-hidden="false">
+        <label class="input-row">Стоимость товара (EUR)
+          <input type="number" id="modal-goods-value" min="0" step="0.01" value="100">
+        </label>
+        <label class="input-row">Таможенная ставка (%)
+          <input type="number" id="modal-tariff-rate" min="0" step="0.01" value="5">
+        </label>
+        <label class="input-row">Ставка НДС (%)
+          <input type="number" id="modal-vat-rate" min="0" step="0.01" value="20">
+        </label>
+        <label class="input-row">Ставка акциза (EUR)
+          <input type="number" id="modal-excise-rate" min="0" step="0.01" value="0">
+        </label>
+      </div>
+
+      <div class="calc-result" id="modal-calc-result" aria-live="polite">Выберите вариант и введите параметры, затем нажмите "Вычислить".</div>
+
+      <div class="card-actions">
+        <button class="btn outline" id="modal-close">Закрыть</button>
+        <button class="btn primary" id="modal-run">Вычислить</button>
+      </div>
+    </div>
+  </template>
+
 </body>
 </html>
