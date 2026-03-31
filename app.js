@@ -38,72 +38,101 @@ function showPanel(title, text, actionLabel){
 }
 
 /* Buttons */
-/* Inline calculator behavior */
-const calcCard = document.getElementById('calc');
-const options = calcCard.querySelectorAll('.option');
-const resultNode = document.getElementById('calc-result');
-const runBtn = document.getElementById('calc-run');
-const resetBtn = document.getElementById('calc-reset');
-
-let activeOption = null;
-options.forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    options.forEach(b=>b.classList.remove('selected'));
-    btn.classList.add('selected');
-    activeOption = btn.dataset.key;
-    // focus first input
-    calcCard.querySelector('#goods-value').focus();
-  });
-});
+/* Calculator moved into modal — open template and wire modal controls */
+const calcRunBtn = document.getElementById('calc-run');
 
 function formatCurrency(num){
   return Number(num).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
 }
 
-function compute(){
-  const goods = parseFloat(document.getElementById('goods-value').value) || 0;
-  const tariff = parseFloat(document.getElementById('tariff-rate').value) || 0;
-  const vatRate = parseFloat(document.getElementById('vat-rate').value) || 0;
-  const excise = parseFloat(document.getElementById('excise-rate').value) || 0;
+function openCalcModal(){
+  const tpl = document.getElementById('calc-template');
+  if(!tpl) return;
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  overlay.innerHTML = `
+    <div class="panel" role="dialog" aria-modal="true" aria-label="Калькулятор таможенных платежей">
+      <strong>Калькулятор таможенных платежей</strong>
+      <div class="panel-body">${tpl.innerHTML}</div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  // focus first interactive element
+  const firstOpt = overlay.querySelector('.option');
+  if(firstOpt) firstOpt.focus();
 
-  // basic calculations (illustrative)
-  const customsDuty = goods * (tariff/100);
-  const vat = (goods + customsDuty + excise) * (vatRate/100);
-  const total = goods + customsDuty + vat + excise;
+  // manage selection within modal
+  let activeOption = null;
+  const options = overlay.querySelectorAll('.option');
+  options.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      options.forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      activeOption = btn.dataset.key;
+      const firstInput = overlay.querySelector('#modal-goods-value');
+      if(firstInput) firstInput.focus();
+    });
+  });
 
-  if(!activeOption){
-    resultNode.textContent = 'Пожалуйста, выберите, что нужно рассчитать.';
-    return;
+  const resultNode = overlay.querySelector('#modal-calc-result');
+
+  function computeModal(){
+    const goods = parseFloat(overlay.querySelector('#modal-goods-value').value) || 0;
+    const tariff = parseFloat(overlay.querySelector('#modal-tariff-rate').value) || 0;
+    const vatRate = parseFloat(overlay.querySelector('#modal-vat-rate').value) || 0;
+    const excise = parseFloat(overlay.querySelector('#modal-excise-rate').value) || 0;
+
+    const customsDuty = goods * (tariff/100);
+    const vat = (goods + customsDuty + excise) * (vatRate/100);
+    const total = goods + customsDuty + vat + excise;
+
+    if(!activeOption){
+      resultNode.textContent = 'Пожалуйста, выберите, что нужно рассчитать.';
+      return;
+    }
+
+    switch(activeOption){
+      case 'customs':
+        resultNode.innerHTML = `Таможенная стоимость: <strong>${formatCurrency(customsDuty)} EUR</strong>`;
+        break;
+      case 'vat':
+        resultNode.innerHTML = `НДС: <strong>${formatCurrency(vat)} EUR</strong>`;
+        break;
+      case 'excise':
+        resultNode.innerHTML = `Акциз: <strong>${formatCurrency(excise)} EUR</strong>`;
+        break;
+      case 'total':
+        resultNode.innerHTML = `Итоговый расчёт: <strong>${formatCurrency(total)} EUR</strong>`;
+        break;
+      default:
+        resultNode.textContent = 'Неизвестный вариант.';
+    }
   }
 
-  switch(activeOption){
-    case 'customs':
-      resultNode.innerHTML = `Таможенная стоимость: <strong>${formatCurrency(customsDuty)} EUR</strong>`;
-      break;
-    case 'vat':
-      resultNode.innerHTML = `НДС: <strong>${formatCurrency(vat)} EUR</strong>`;
-      break;
-    case 'excise':
-      resultNode.innerHTML = `Акциз: <strong>${formatCurrency(excise)} EUR</strong>`;
-      break;
-    case 'total':
-      resultNode.innerHTML = `Итоговый расчёт: <strong>${formatCurrency(total)} EUR</strong>`;
-      break;
-    default:
-      resultNode.textContent = 'Неизвестный вариант.';
+  // button handlers
+  const closeBtn = overlay.querySelector('#modal-close');
+  const runBtn = overlay.querySelector('#modal-run');
+
+  overlay.addEventListener('click', (e)=>{
+    if(e.target === overlay) overlay.remove();
+  });
+  if(closeBtn) closeBtn.addEventListener('click', ()=> overlay.remove());
+  if(runBtn) runBtn.addEventListener('click', computeModal);
+
+  // keyboard: Escape closes modal
+  function onKey(e){
+    if(e.key === 'Escape') {
+      overlay.remove();
+      document.removeEventListener('keydown', onKey);
+    }
   }
+  document.addEventListener('keydown', onKey);
 }
 
-runBtn.addEventListener('click', compute);
-resetBtn.addEventListener('click', ()=>{
-  document.getElementById('goods-value').value = 100;
-  document.getElementById('tariff-rate').value = 5;
-  document.getElementById('vat-rate').value = 20;
-  document.getElementById('excise-rate').value = 0;
-  options.forEach(b=>b.classList.remove('selected'));
-  activeOption = null;
-  resultNode.textContent = 'Выберите вариант и введите параметры, затем нажмите "Рассчитать".';
-});
+if(calcRunBtn){
+  calcRunBtn.addEventListener('click', openCalcModal);
+}
+
 document.getElementById('create-docs').addEventListener('click', ()=>{
   showPanel('Конструктор документов', 'Открыть конструктор деклараций и сопроводительных документов.', 'Создать');
 });
@@ -111,11 +140,28 @@ document.getElementById('ask-ai').addEventListener('click', ()=>{
   showPanel('AI Помощник', 'Задайте вопрос по таможенному законодательству и оформлению грузов.', 'Задать вопрос');
 });
 document.getElementById('open-kb').addEventListener('click', ()=>{
-  // bring the in-card knowledge column into focus/visible area
-  const kb = document.getElementById('kb-content');
-  if(kb){
-    kb.scrollIntoView({behavior:'smooth',block:'center'});
-    kb.focus();
+  const tpl = document.getElementById('kb-template');
+  if(tpl){
+    // create a modal panel with the template's inner content
+    const overlay = document.createElement('div');
+    overlay.className = 'overlay';
+    overlay.innerHTML = `
+      <div class="panel" role="dialog" aria-modal="true" aria-label="База знаний">
+        <strong>База знаний</strong>
+        <div class="kb-panel-content">${tpl.innerHTML}</div>
+        <div class="panel-actions">
+          <button class="btn outline close">Закрыть</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.querySelector('.close').focus();
+    // make inner scrollable container keyboard-focusable
+    const inner = overlay.querySelector('.kb-scroll');
+    if(inner) inner.focus();
+    overlay.addEventListener('click', (e)=>{
+      if(e.target===overlay || e.target.classList.contains('close')) overlay.remove();
+    });
   } else {
     showPanel('База знаний', 'Доступ к законам, правилам и судебной практике.', 'Открыть');
   }
